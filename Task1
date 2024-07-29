@@ -1,0 +1,137 @@
+#Grade Tracker Application
+This Python application uses the tkinter library to create a graphical user interface (GUI) for tracking student grades. 
+##It allows users to:
+Add Grades: Enter grades for different subjects.
+Display Grades: View all recorded grades, including the overall average, letter grade, and GPA.
+
+##Features:
+Add and View Grades: Easily input grades and view a summary of all grades.
+Grade Calculation: Computes the average grade, letter grade, and GPA based on the recorded grades.
+Simple GUI: Designed with a clean and straightforward interface using tkinter.
+
+##How It Works:
+StudentGrades Class: Manages grade data, performs calculations, and generates a summary.
+GradeTrackerApp Class: Provides the GUI to interact with the StudentGrades class, allowing users to input and display grades.
+
+##Usage:
+Enter the subject and grade in the provided fields.
+Click "Add Grade" to store the grade.
+Click "Display Grades" to see the overall summary.
+
+##Dependencies:
+Python 3.x
+tkinter
+
+
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import PhotoImage
+
+class StudentGrades:
+    def __init__(self):
+        self.grades = {}
+
+    def add_grade(self, subject, grade):
+        if subject in self.grades:
+            self.grades[subject].append(grade)
+        else:
+            self.grades[subject] = [grade]
+
+    def calculate_average(self):
+        total_grades = sum([sum(grades) for grades in self.grades.values()])
+        total_subjects = sum([len(grades) for grades in self.grades.values()])
+        return total_grades / total_subjects if total_subjects != 0 else 0
+
+    def get_letter_grade(self, average):
+        if average >= 90:
+            return 'A'
+        elif average >= 80:
+            return 'B'
+        elif average >= 70:
+            return 'C'
+        elif average >= 60:
+            return 'D'
+        else:
+            return 'F'
+
+    def get_gpa(self, average):
+        if average >= 90:
+            return 4.0
+        elif average >= 80:
+            return 3.0
+        elif average >= 70:
+            return 2.0
+        elif average >= 60:
+            return 1.0
+        else:
+            return 0.0
+
+    def display_grades(self):
+        display_text = "\nGrades by subject:\n"
+        for subject, grades in self.grades.items():
+            display_text += f"{subject}: {grades}\n"
+        average = self.calculate_average()
+        letter_grade = self.get_letter_grade(average)
+        gpa = self.get_gpa(average)
+        display_text += f"\nOverall Average: {average:.2f}\n"
+        display_text += f"Letter Grade: {letter_grade}\n"
+        display_text += f"GPA: {gpa:.2f}\n"
+        return display_text
+
+
+class GradeTrackerApp:
+    def __init__(self, root):
+        self.student_grades = StudentGrades()
+        self.root = root
+        self.root.title("Grade Tracker")
+        self.root.configure(bg='black')
+
+        font_settings = ("Times New Roman", 12)
+
+        self.icon = PhotoImage(file='pyprjicon.png')
+        self.root.iconphoto(True, self.icon)
+
+        self.subject_label = tk.Label(root, text="Subject:", bg='black', fg='white', font=font_settings)
+        self.subject_label.grid(row=0, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.subject_entry = tk.Entry(root, bg='darkgray', fg='black', font=font_settings)
+        self.subject_entry.grid(row=0, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.grade_label = tk.Label(root, text="Grade:", bg='black', fg='white', font=font_settings)
+        self.grade_label.grid(row=1, column=0, padx=10, pady=10, sticky="nsew")
+
+        self.grade_entry = tk.Entry(root, bg='darkgray', fg='black', font=font_settings)
+        self.grade_entry.grid(row=1, column=1, padx=10, pady=10, sticky="nsew")
+
+        self.add_button = tk.Button(root, text="Add Grade", command=self.add_grade, bg='black', fg='white', font=font_settings)
+        self.add_button.grid(row=2, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+
+        self.display_button = tk.Button(root, text="Display Grades", command=self.display_grades, bg='black', fg='white', font=font_settings)
+        self.display_button.grid(row=3, column=0, columnspan=2, padx=10, pady=10, sticky="nsew")
+
+        for i in range(2):
+            self.root.grid_columnconfigure(i, weight=1)
+
+    def add_grade(self):
+        subject = self.subject_entry.get()
+        try:
+            grade = float(self.grade_entry.get())
+            if subject and 0 <= grade <= 100:
+                self.student_grades.add_grade(subject, grade)
+                self.subject_entry.delete(0, tk.END)
+                self.grade_entry.delete(0, tk.END)
+                messagebox.showinfo("Success", "Grade added successfully!")
+            else:
+                messagebox.showerror("Error", "Please enter a valid subject and grade between 0 and 100.")
+        except ValueError:
+            messagebox.showerror("Error", "Please enter a valid grade.")
+
+    def display_grades(self):
+        grades_display = self.student_grades.display_grades()
+        messagebox.showinfo("Grades", grades_display)
+
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = GradeTrackerApp(root)
+    root.mainloop()
