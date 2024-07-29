@@ -4,24 +4,6 @@ This Python application uses the tkinter library to create a graphical user inte
 Add Grades: Enter grades for different subjects.
 Display Grades: View all recorded grades, including the overall average, letter grade, and GPA.
 
-##Features:
-Add and View Grades: Easily input grades and view a summary of all grades.
-Grade Calculation: Computes the average grade, letter grade, and GPA based on the recorded grades.
-Simple GUI: Designed with a clean and straightforward interface using tkinter.
-
-##How It Works:
-StudentGrades Class: Manages grade data, performs calculations, and generates a summary.
-GradeTrackerApp Class: Provides the GUI to interact with the StudentGrades class, allowing users to input and display grades.
-
-##Usage:
-Enter the subject and grade in the provided fields.
-Click "Add Grade" to store the grade.
-Click "Display Grades" to see the overall summary.
-
-##Dependencies:
-Python 3.x
-tkinter
-
 
 import tkinter as tk
 from tkinter import messagebox
